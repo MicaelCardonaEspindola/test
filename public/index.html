@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
+</head>
+
+<body>
+  <h1 class="mt-5">MiniChat</h1>
+  <hr>
+  <form id="miFormulario">
+    <div class="row">
+      <div class="col-8">
+        <input type="text" id="txtMessage" placeholder="message" class="form-control">
+      </div>
+
+      <div class="col-4">
+        <button type="submit" class="btn btn-primary">
+          Send
+        </button>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col">
+        <ul id="misMensajes" class="mt-2"></ul>
+      </div>
+    </div>
+  </form>
+
+
+
+
+
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.7.5/socket.io.js"
+    integrity="sha512-luMnTJZ7oEchNDZAtQhgjomP1eZefnl82ruTH/3Oj/Yu5qYtwL7+dVRccACS/Snp1lFXq188XFipHKYE75IaQQ=="
+    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script>
+    const socket = io('http://localhost:8080');
+
+    const formulario= document.querySelector('#miFormulario');
+    const mensajes=document.querySelector('#misMensajes');
+    const txtMessage=document.querySelector('#txtMessage')
+
+    formulario.addEventListener('submit', (event)=>{
+      event.preventDefault();
+      const nuevoMensaje= txtMessage.value;
+      socket.emit('mensaje-to-server',{
+        msg:nuevoMensaje
+      })
+    })
+
+    socket.on('mensaje-from-server',(data)=>{
+      console.log(data)
+       mensajes.innerHTML += `<li>${data.msg}</li>`
+      })  
+
+
+
+
+/*    socket.on('mensaje-bienvenida', (data) => {  //'mensaje-bienvenida'
+      console.log(data);
+      socket.emit('informacion-personal', {
+        name: 'Micael',
+        lastname: 'Cardona Espindola'
+      })
+    });   */
+    //mensaje-bienvenida must be the same that emit message  don't forget we use on to hear and emit, to send a message
+
+
+  </script>
+</body>
+
+</html>
